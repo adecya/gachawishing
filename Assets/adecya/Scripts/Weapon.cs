@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 using static Character;
 using rarity = RarityClass.Rarity;
@@ -44,6 +46,7 @@ public class Weapon : MonoBehaviour
     [Header("Weapon UI Display")]
     [SerializeField] private Image iconImg;
     [SerializeField] private TextMeshProUGUI nameTxt;
+    [SerializeField] private TextMeshProUGUI descTxt;
     #endregion
 
     public void InitializeWeapon()
@@ -58,7 +61,10 @@ public class Weapon : MonoBehaviour
     public void InitializeDisplay()
     {
         iconImg.sprite = weaponSprite;
-        nameTxt.text = weaponName.ToString();
+        nameTxt.text = weaponSprite.name;
+        descTxt.text = $"Rarity\t: {weaponRarity}\n" +
+            $"Attack\t: {baseAttack}\n" +
+            $"Effect\t: {specialEffect}";
     }
 
     public void ChangeWeaponSO(WeaponSO newWeaponSO)

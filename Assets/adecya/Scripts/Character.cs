@@ -30,6 +30,7 @@ public class Character : MonoBehaviour
     [Header("Character UI Display")]
     [SerializeField] private Image iconImg;
     [SerializeField] private TextMeshProUGUI nameTxt;
+    [SerializeField] private TextMeshProUGUI descTxt;
     #endregion
 
     public void InitializeCharacter()
@@ -46,6 +47,10 @@ public class Character : MonoBehaviour
     {
         iconImg.sprite = characterSprite;
         nameTxt.text = characterName.ToString();
+        descTxt.text = $"Rarity\t: {characterRarity}\n" +
+            $"HP\t\t: {characterHp}\n" +
+            $"Attack\t: {characterAtk}\n" +
+            $"Deffend\t: {characterDef}";
     }
 
     public void ChangeCharacterSO(CharacterSO newCharSO)
