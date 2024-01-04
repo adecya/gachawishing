@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f37517ec5121a4409aa9f15cb43e45e, type: 3}
-  m_Name: SharpEdge
+  m_Name: DarkSword
   m_EditorClassIdentifier: 
-  weaponName: 6
-  weaponRarity: 1
-  baseAttack: 35
+  weaponName: 1
+  weaponRarity: 3
+  baseAttack: 45
   specialEffect: 1
-  weaponSprite: {fileID: 21300000, guid: 125018552825bda4bb2f68650f90c276, type: 3}
+  weaponSprite: {fileID: 21300000, guid: bfe92adfb4f889d47a2e5f78194bb7c7, type: 3}

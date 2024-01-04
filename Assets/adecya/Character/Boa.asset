@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Boa
   m_EditorClassIdentifier: 
   characterName: 1
-  characterRarity: 0
+  characterRarity: 1
   characterHp: 475
   characterAtk: 28
   characterDef: 11

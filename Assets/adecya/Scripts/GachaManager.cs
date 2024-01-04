@@ -1,6 +1,8 @@
 using DanielLochner.Assets.SimpleScrollSnap;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
@@ -19,9 +21,19 @@ public class GachaManager : MonoBehaviour
 
     [Header("Gacha List")]
     [SerializeField] private CharacterSO[] characterList;
+    [SerializeField] private CharacterSO[] epicOrMoreCharList;
     [SerializeField] private WeaponSO[] weaponList;
+    [SerializeField] private WeaponSO[] epicOrMoreWeaponList;
     private List<object> standartList;
+    private List<object> gachaTemp;
     private int gachaCount;
+    private bool isGacha10X;
+    private bool hasEpicOrMore;
+    private bool isSkip;
+    private static int pityCount = 0;
+
+    [Header("Result 10x Draw Image")]
+    [SerializeField] private List<Image> resultObject10XUI;
 
     [Header("Chance For Wishing")]
     [SerializeField] private WishingChanceSO standartWishingChance;
@@ -30,8 +42,15 @@ public class GachaManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject resultDisplayUI;
     [SerializeField] private GameObject gachaResultUI;
+    [SerializeField] private GameObject resultGacha10XUI;
     [SerializeField] private Button wish1xBtn;
     [SerializeField] private Button wish10xBtn;
+    [SerializeField] private GameObject skipBtn;
+    [SerializeField] private TextMeshProUGUI pityTxt;
+    [Header("Details Gacha UI")]
+    [SerializeField] private GameObject detailsStandartWishUI;
+    [SerializeField] private GameObject detailsCharacterWishUI;
+    [SerializeField] private GameObject detailsWeaponWishUI;
 
     [Header("Script")]
     [SerializeField] private Character character;
@@ -45,11 +64,23 @@ public class GachaManager : MonoBehaviour
         standartList.AddRange(weaponList);
 
         ChangeGachaType();
+        ChangePityText();
+
+        isGacha10X = false;
+        hasEpicOrMore = false;
+        isSkip = false;
+
+        gachaTemp = new List<object>();
     }
 
     public void PerformGacha(int gachaCount)
     {
         this.gachaCount = gachaCount;
+        if(gachaCount >= 10)
+        {
+            isGacha10X = true;
+            skipBtn.SetActive(true);
+        }
 
         switch(currentGachaType)
         {
@@ -72,26 +103,52 @@ public class GachaManager : MonoBehaviour
         switch (currentGachaType)
         {
             case GachaType.CharacterWish:
-                if (gachaCount > 0)
+                if (isGacha10X && !hasEpicOrMore && gachaCount == 1)
                 {
-                    Gacha(characterList);
+                    Gacha(epicOrMoreCharList);
                 }
                 else
                 {
-                    resultDisplayUI.SetActive(false);
-                    gachaResultUI.SetActive(false);
+                    if (gachaCount > 0)
+                    {
+                        Gacha(characterList);
+                    }
+                    else
+                    {
+                        if (isGacha10X)
+                        {
+                            ShowGachaTemp();
+                        }
+                        else
+                        {
+                            ExitGacha();
+                        }
+                    }
                 }
                 break;
 
             case GachaType.WeaponWish:
-                if (gachaCount > 0)
+                if (isGacha10X && !hasEpicOrMore && gachaCount == 1)
                 {
-                    Gacha(weaponList);
+                    Gacha(epicOrMoreWeaponList);
                 }
                 else
                 {
-                    resultDisplayUI.SetActive(false);
-                    gachaResultUI.SetActive(false);
+                    if (gachaCount > 0)
+                    {
+                        Gacha(weaponList);
+                    }
+                    else
+                    {
+                        if (isGacha10X)
+                        {
+                            ShowGachaTemp();
+                        }
+                        else
+                        {
+                            ExitGacha();
+                        }
+                    }
                 }
                 break;
 
@@ -102,20 +159,110 @@ public class GachaManager : MonoBehaviour
                 }
                 else
                 {
-                    resultDisplayUI.SetActive(false);
-                    gachaResultUI.SetActive(false);
+                    if (isGacha10X)
+                    {
+                        ShowGachaTemp();
+                    }
+                    else
+                    {
+                        ExitGacha();
+                    }
                 }
                 break;
         }
     }
 
-    public void Gacha<T>(T[] gachaList)
+    private void ExitGacha()
+    {
+        resultDisplayUI.SetActive(false);
+        gachaResultUI.SetActive(false);
+        resultGacha10XUI.SetActive(false);
+
+        isGacha10X = false;
+        hasEpicOrMore = false;
+        gachaTemp.Clear();
+        skipBtn.SetActive(false);
+        isSkip = false;
+    }
+
+    private void ShowGachaTemp()
+    {
+        resultDisplayUI.SetActive(false);
+        isSkip = false;
+        isGacha10X = false;
+
+        int i = 0;
+        var sortedList = gachaTemp.Cast<object>().OrderBy(GetRarityNumber);
+
+        foreach (var item in sortedList)
+        {
+            if(item is CharacterSO)
+            {
+                resultObject10XUI[i].sprite = (item as CharacterSO).characterSprite;
+            }
+            else
+            {
+                resultObject10XUI[i].sprite = (item as WeaponSO).weaponSprite;
+            }
+            i++;
+        }
+
+        resultGacha10XUI.SetActive(true);
+    }
+
+    public void SkipGacha()
+    {
+        isSkip = true;
+
+        switch (currentGachaType)
+        {
+            case GachaType.CharacterWish:
+                SkipGachaTillEnd(characterList, epicOrMoreCharList);
+                break;
+
+            case GachaType.WeaponWish:
+                SkipGachaTillEnd(weaponList, epicOrMoreWeaponList);
+                break;
+
+            case GachaType.StandartWish:
+                SkipGachaTillEnd(standartList.ToArray(), standartList.ToArray());
+                break;
+        }
+
+        isSkip = false;
+        ShowGachaTemp();
+    }
+
+    private void SkipGachaTillEnd<T>(T[] gachaList, T[] epicList)
+    {
+        if(gachaCount > 0)
+        {
+            for (int i = 0; i < gachaCount;)
+            {
+                if (hasEpicOrMore)
+                {
+                    Gacha(gachaList);
+                }
+                else if(!hasEpicOrMore && gachaCount == 1)
+                {
+                    Gacha(epicList);
+                }
+                else
+                {
+                    Gacha(gachaList);
+                }
+            }
+        }
+    }
+
+    private void Gacha<T>(T[] gachaList)
     {
         float totalChance = 0f;
         float commonChance, rareChance, epicChance, legendaryChance;
+        pityCount++;
+        ChangePityText();
         resultDisplayUI.SetActive(false);
 
-        // Hitung total peluang dari semua item
         if (currentGachaType == GachaType.StandartWish)
         {
             commonChance = standartWishingChance.commonChance;
@@ -153,10 +300,15 @@ public class GachaManager : MonoBehaviour
             }
         }
 
-        // Mendapatkan nilai acak untuk menentukan item yang didapatkan
         float randomValue = Random.Range(0f, totalChance);
 
-        // Memilih item berdasarkan peluang
+        if (pityCount == 50)
+        {
+            randomValue = totalChance;
+            pityCount = 0;
+            ChangePityText();
+        }
+
         foreach (var item in gachaList)
         {
             switch (GetRarity(item))
@@ -189,6 +341,7 @@ public class GachaManager : MonoBehaviour
                     if (randomValue <= epicChance)
                     {
                         SetGacha(item);
+                        hasEpicOrMore = true;
                         return;
                     }
                     else
@@ -201,6 +354,9 @@ public class GachaManager : MonoBehaviour
                     if (randomValue <= legendaryChance)
                     {
                         SetGacha(item);
+                        hasEpicOrMore = true;
+                        pityCount = 0;
+                        ChangePityText();
                         return;
                     }
                     else
@@ -208,11 +364,23 @@ public class GachaManager : MonoBehaviour
                         randomValue -= legendaryChance;
                     }
                     break;
-
-                default:
-                    Debug.LogError("Not Found Gacha");
-                    break;
             }
+        }
+    }
+
+    private int GetRarityNumber<T>(T item)
+    {
+        if (item is CharacterSO)
+        {
+            return (int)(item as CharacterSO).characterRarity;
+        }
+        else if (item is WeaponSO)
+        {
+            return (int)(item as WeaponSO).weaponRarity;
+        }
+        else
+        {
+            return 0;
         }
     }
 
@@ -237,15 +405,19 @@ public class GachaManager : MonoBehaviour
         if(item is CharacterSO)
         {
             SetCharacterGacha(item as CharacterSO);
+            Debug.Log($"Get : {(item as CharacterSO).characterName}");
         }
         else if(item is WeaponSO)
         {
             SetWeaponGacha(item as WeaponSO);
+            Debug.Log($"Get : {(item as WeaponSO).weaponName}");
         }
         else
         {
             Debug.Log("Item not found");
         }
+
+        gachaTemp.Add(item);
     }
 
     private void SetCharacterGacha(CharacterSO characterSO)
@@ -253,7 +425,10 @@ public class GachaManager : MonoBehaviour
         character.ChangeCharacterSO(characterSO);
         character.InitializeCharacter();
         character.InitializeDisplay();
-        resultDisplayUI.SetActive(true);
+        if (!isSkip)
+        {
+            resultDisplayUI.SetActive(true);
+        }
         gachaCount--;
     }
 
@@ -262,7 +437,10 @@ public class GachaManager : MonoBehaviour
         weapon.ChangeWeaponSO(weaponSO);
         weapon.InitializeWeapon();
         weapon.InitializeDisplay();
-        resultDisplayUI.SetActive(true);
+        if (!isSkip)
+        {
+            resultDisplayUI.SetActive(true);
+        }
         gachaCount--;
     }
 
@@ -287,5 +465,28 @@ public class GachaManager : MonoBehaviour
                 Debug.LogError("Selected Panel Not Found");
                 break;
         }
+    }
+
+    public void OpenDetailsGachaUI()
+    {
+        switch(currentGachaType)
+        {
+            case GachaType.CharacterWish:
+                detailsCharacterWishUI.SetActive(true);
+                break;
+
+            case GachaType.WeaponWish:
+                detailsWeaponWishUI.SetActive(true);
+                break;
+
+            case GachaType.StandartWish:
+                detailsStandartWishUI.SetActive(true);
+                break;
+        }
+    }
+
+    private void ChangePityText()
+    {
+        pityTxt.text = $"Pity : {pityCount}";
     }
 }

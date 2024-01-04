@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f37517ec5121a4409aa9f15cb43e45e, type: 3}
-  m_Name: ForgottenSword
+  m_Name: DarkAxe
   m_EditorClassIdentifier: 
-  weaponName: 3
-  weaponRarity: 0
-  baseAttack: 20
-  specialEffect: 0
-  weaponSprite: {fileID: 21300000, guid: 3e896004d1fc46e45bd470f2a211ec75, type: 3}
+  weaponName: 0
+  weaponRarity: 2
+  baseAttack: 33
+  specialEffect: 1
+  weaponSprite: {fileID: 21300000, guid: 6ddcbb5709990184f8d5034b4c0c59ce, type: 3}

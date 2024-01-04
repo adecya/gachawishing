@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f37517ec5121a4409aa9f15cb43e45e, type: 3}
-  m_Name: EarthSword
+  m_Name: IceQueenSword
   m_EditorClassIdentifier: 
-  weaponName: 9
+  weaponName: 4
   weaponRarity: 3
-  baseAttack: 75
-  specialEffect: 2
-  weaponSprite: {fileID: 21300000, guid: e086c6d5f6af1af40bda6b89f3822b25, type: 3}
+  baseAttack: 45
+  specialEffect: 3
+  weaponSprite: {fileID: 21300000, guid: c6c01ade8a59f654a899618497a151ac, type: 3}

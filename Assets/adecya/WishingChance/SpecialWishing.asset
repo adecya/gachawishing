@@ -15,4 +15,4 @@ MonoBehaviour:
   commonChance: 45
   rareChance: 35
   epicChance: 10
-  legendaryChance: 5
+  legendaryChance: 3

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f37517ec5121a4409aa9f15cb43e45e, type: 3}
-  m_Name: LightSword
+  m_Name: ShurikenSword
   m_EditorClassIdentifier: 
-  weaponName: 5
-  weaponRarity: 0
-  baseAttack: 18
-  specialEffect: 0
-  weaponSprite: {fileID: 21300000, guid: d2d7ddd0ab449cf4cbefa54943c9f8cc, type: 3}
+  weaponName: 7
+  weaponRarity: 1
+  baseAttack: 22
+  specialEffect: 4
+  weaponSprite: {fileID: 21300000, guid: 5f711a1bf1b7f4542a9dde977b4cd2eb, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Leona
   m_EditorClassIdentifier: 
   characterName: 3
-  characterRarity: 2
+  characterRarity: 3
   characterHp: 625
   characterAtk: 45
   characterDef: 35

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shin
   m_EditorClassIdentifier: 
   characterName: 4
-  characterRarity: 3
+  characterRarity: 4
   characterHp: 750
   characterAtk: 75
   characterDef: 55

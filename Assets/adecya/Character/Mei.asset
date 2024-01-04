@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mei
   m_EditorClassIdentifier: 
   characterName: 2
-  characterRarity: 1
+  characterRarity: 2
   characterHp: 550
   characterAtk: 30
   characterDef: 20

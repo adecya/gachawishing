@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FlyingSword
   m_EditorClassIdentifier: 
   weaponName: 2
-  weaponRarity: 1
+  weaponRarity: 2
   baseAttack: 26
   specialEffect: 4
   weaponSprite: {fileID: 21300000, guid: c3803a87293294c48867fb9901c106e0, type: 3}

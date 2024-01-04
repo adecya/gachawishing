@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Asuka
   m_EditorClassIdentifier: 
   characterName: 0
-  characterRarity: 0
+  characterRarity: 1
   characterHp: 500
   characterAtk: 22
   characterDef: 17
