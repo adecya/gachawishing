@@ -19,12 +19,11 @@ public class GachaManager : MonoBehaviour
 
     private GachaType currentGachaType;
 
-    [Header("Gacha List")]
-    [SerializeField] private CharacterSO[] characterList;
-    [SerializeField] private CharacterSO[] epicOrMoreCharList;
-    [SerializeField] private WeaponSO[] weaponList;
-    [SerializeField] private WeaponSO[] epicOrMoreWeaponList;
-    private List<object> standartList;
+    private CharacterSO[] characterList;
+    private CharacterSO[] epicOrMoreCharList;
+    private WeaponSO[] weaponList;
+    private WeaponSO[] epicOrMoreWeaponList;
+    private List<object> standartList = new List<object>();
     private List<object> gachaTemp;
     private int gachaCount;
     private bool isGacha10X;
@@ -57,9 +56,16 @@ public class GachaManager : MonoBehaviour
     [SerializeField] private Weapon weapon;
     [SerializeField] private SimpleScrollSnap simpleSnap;
 
+    private void Awake()
+    {
+        characterList = ItemList.Instance.characterList;
+        epicOrMoreCharList = ItemList.Instance.epicOrMoreCharList;
+        weaponList = ItemList.Instance.weaponList;
+        epicOrMoreWeaponList = ItemList.Instance.epicOrMoreWeaponList;
+    }
+
     private void Start()
     {
-        standartList = new List<object>();
         standartList.AddRange(characterList);
         standartList.AddRange(weaponList);
 
@@ -430,6 +436,8 @@ public class GachaManager : MonoBehaviour
             resultDisplayUI.SetActive(true);
         }
         gachaCount--;
+
+        InventoryManager.Instance.AddItem(characterSO);
     }
 
     private void SetWeaponGacha(WeaponSO weaponSO)
@@ -442,6 +450,8 @@ public class GachaManager : MonoBehaviour
             resultDisplayUI.SetActive(true);
         }
         gachaCount--;
+
+        InventoryManager.Instance.AddItem(weaponSO);
     }
 
     public void ChangeGachaType()
